@@ -1,0 +1,37 @@
+{
+  "name": "slackslashcmd",
+  "type": "flogo:trigger",
+  "ref": "https://github.com/pawarvishal123/slackslashcmd",
+  "version": "0.0.1",
+  "title": "Slack Slash Command Trigger",
+  "author": "Vishal Pawar <vpawar@tibco.com>",
+  "description": "Slack Slash Command Trigger",
+  "output": [
+    {
+      "name": "command",
+      "type": "string"
+    },
+    {
+      "name": "params",
+      "type": "string"
+    }
+  ],
+  "reply": [
+    {
+      "name": "data",
+      "type": "any"
+    }
+  ],
+  "handler": {
+    "settings": [{
+      "name": "AccessToken",
+      "type": "string",
+	  "required":"true"
+    },
+    {
+      "name": "Port",
+      "type": "string",
+	  "required":"true"
+    }]
+  }
+}
