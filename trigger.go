@@ -66,7 +66,7 @@ func (t *SlackSlashCmdTrigger) Start() error {
 			verificationToken string
 		)
 	
-		flag.StringVar(&verificationToken, "token", accessToken, "Your Slash Verification Token")
+		flag.StringVar(&verificationToken, "token", accessToken, accessToken)
 		flag.Parse()
 	
 		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
