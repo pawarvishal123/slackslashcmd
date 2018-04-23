@@ -86,7 +86,6 @@ func (t *SlackSlashCmdTrigger) Start() error {
 		})
 		fmt.Println("[INFO] Server listening")
 		http.ListenAndServe(":"+port, nil)
-		}
 		//log.Debugf("Processing Handler: %s", handler.ActionId)
 	}
 
