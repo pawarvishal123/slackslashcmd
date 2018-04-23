@@ -81,8 +81,8 @@ func (t *SlackSlashCmdTrigger) Start() error {
 				return
 			}
 			
-			params := &slack.Msg{Text: s.Text}
-			t.RunHandler(handler, s.Command, params, w)
+			//params := &slack.Msg{Text: s.Text}
+			t.RunHandler(handler, s.Command, s.Text, w)
 		})
 		fmt.Println("[INFO] Server listening")
 		http.ListenAndServe(":"+port, nil)
