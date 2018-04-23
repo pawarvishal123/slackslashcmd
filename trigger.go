@@ -2,7 +2,6 @@ package slackslashcmd
 
 import (
 	"context"
-	"log"
 	"fmt"
 	"encoding/json"
 	"flag"
