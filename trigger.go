@@ -125,7 +125,7 @@ func (t *SlackSlashCmdTrigger) RunHandler(handler *trigger.Handler, command stri
 	if replyData != nil {
 		w.Header().Set("Content-Type", "application/json")	
 		if err := json.NewEncoder(w).Encode(replyData); err != nil {
-			log.Error(err)
+			fmt.Printf(err)
 		}
 		return
 	}
