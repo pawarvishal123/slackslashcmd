@@ -74,3 +74,6 @@ Provide access token and port number to receive command from slack channel. The 
     ]
 }
 ```
+
+## Third Party Library
+Slack API in Go - [https://github.com/nlopes/slack](https://github.com/nlopes/slack)
