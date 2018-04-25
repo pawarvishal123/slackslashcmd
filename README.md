@@ -1,6 +1,6 @@
 # Slack Slash Command Trigger
-Flogo trigger activity for Slack Slash Commands
-
+Flogo trigger activity for Slack Slash Commands. You need to register slack slash command for your "slack app" and provide public URL of you flogo app endpoint. 
+Slack "Verification Token" should be provided as input for activity configuration.
 
 ## Installation
 
@@ -67,8 +67,8 @@ Provide access token and port number to receive command from slack channel. The 
             }
           },
           "settings": {
-            "AccessToken": "<<YOUR-TOKEN>>",
-            "Port": "<<Your-Port>>"
+            "AccessToken": "<<YOUR-SLACK-VERFIFICATION-TOKEN>>",
+            "Port": "<<YOUR-PORT>>"
           }
       }
     ]
