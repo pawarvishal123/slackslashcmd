@@ -19,11 +19,35 @@ Settings, Outputs and Endpoint:
 {
   "output": [
     {
+      "name": "channel_id",
+      "type": "string"
+    },
+    {
+      "name": "channel_name",
+      "type": "string"
+    },
+    {
       "name": "command",
       "type": "string"
     },
     {
-      "name": "params",
+      "name": "team_domain",
+      "type": "string"
+    },
+    {
+      "name": "team_id",
+      "type": "string"
+    },
+    {
+      "name": "text",
+      "type": "string"
+    },
+    {
+      "name": "user_id",
+      "type": "string"
+    },
+    {
+      "name": "user_name",
       "type": "string"
     }
   ],
@@ -47,10 +71,16 @@ Settings, Outputs and Endpoint:
 ```
 
 ## Outputs
-| Output  | Description                              |
-|:--------|:-----------------------------------------|
-| command | The Slack command that was executed      |
-| params  | The additional parameters that were sent |
+| Output       | Description                                                                                                                   |
+|:-------------|:------------------------------------------------------------------------------------------------------------------------------|
+| channel_id   | The unique ID of the channel the command came from                                                                            |
+| channel_name | The name of the channel the command came from                                                                                 |
+| command      | The Slack command that was executed                                                                                           |
+| team_domain  | The name of the Slack workspace (if the URL of your Slack workspace is `myteam.slack.com`, the team_domain would be `myteam`) |
+| team_id      | The unique ID of your Slack workspace                                                                                         |
+| text         | The additional text that was sent                                                                                             |
+| user_id      | The ID of the user that sent the message                                                                                      |
+| user_name    | The name of the user that sent the message                                                                                    |
 
 ## Reply
 | Reply | Description                        |

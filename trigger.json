@@ -2,17 +2,41 @@
   "name": "slackslashcmd",
   "type": "flogo:trigger",
   "ref": "github.com/pawarvishal123/slackslashcmd",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "title": "Slack Slash Command Trigger",
   "author": "Vishal Pawar <vpawar@tibco.com>",
   "description": "Slack Slash Command Trigger",
   "output": [
     {
+      "name": "channel_id",
+      "type": "string"
+    },
+    {
+      "name": "channel_name",
+      "type": "string"
+    },
+    {
       "name": "command",
       "type": "string"
     },
     {
-      "name": "params",
+      "name": "team_domain",
+      "type": "string"
+    },
+    {
+      "name": "team_id",
+      "type": "string"
+    },
+    {
+      "name": "text",
+      "type": "string"
+    },
+    {
+      "name": "user_id",
+      "type": "string"
+    },
+    {
+      "name": "user_name",
       "type": "string"
     }
   ],

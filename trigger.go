@@ -70,7 +70,7 @@ func (t *SlackSlashCmdTrigger) Start() error {
 				return
 			}
 
-			t.RunHandler(handler, s.Command, s.Text, w)
+			t.RunHandler(handler, s.ChannelID, s.ChannelName, s.Command, s.TeamDomain, s.TeamID, s.Text, s.UserID, s.UserName, w)
 		})
 		log.Infof("Server listening on port [%s]", port)
 		http.ListenAndServe(fmt.Sprintf(":%s", port), nil)
@@ -86,10 +86,16 @@ func (t *SlackSlashCmdTrigger) Stop() error {
 }
 
 // RunHandler action on new Slack message
-func (t *SlackSlashCmdTrigger) RunHandler(handler *trigger.Handler, command string, params string, w http.ResponseWriter) {
+func (t *SlackSlashCmdTrigger) RunHandler(handler *trigger.Handler, channelID string, channelName string, command string, teamDomain string, teamID string, text string, userID string, userName string, w http.ResponseWriter) {
 	trgData := make(map[string]interface{})
+	trgData["channel_id"] = channelID
+	trgData["channel_name"] = channelName
 	trgData["command"] = command
-	trgData["params"] = params
+	trgData["team_domain"] = teamDomain
+	trgData["team_id"] = teamID
+	trgData["text"] = text
+	trgData["user_id"] = userID
+	trgData["user_name"] = userName
 
 	results, err := handler.Handle(context.Background(), trgData)
 
