@@ -2,9 +2,8 @@ package slackslashcmd
 
 import (
 	"context"
-	"fmt"
 	"encoding/json"
-	"flag"
+	"fmt"
 	"net/http"
 
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
@@ -12,7 +11,7 @@ import (
 	"github.com/nlopes/slack"
 )
 
-var flogolog = logger.GetLogger("trigger-flogo-slackslashcmd")
+var log = logger.GetLogger("trigger-flogo-slackslashcmd")
 
 // SlackSlashCmdTrigger is Slack slash cmd trigger
 type SlackSlashCmdTrigger struct {
@@ -43,49 +42,38 @@ func (t *SlackSlashCmdTrigger) Metadata() *trigger.Metadata {
 
 // Initialize implements trigger.Init
 func (t *SlackSlashCmdTrigger) Initialize(ctx trigger.InitContext) error {
-	flogolog.Debugf("Initializing slack recv trigger...")
+	log.Debugf("Initializing Slack Slash Command trigger...")
 	t.handlers = ctx.GetHandlers()
 	return nil
 }
 
 // Start implements ext.Trigger.Start
 func (t *SlackSlashCmdTrigger) Start() error {
-
-	fmt.Printf("Starting slack slash CMD trigger..")
+	log.Infof("Starting Slack Slash Command trigger...")
 	handlers := t.handlers
-	
-	flogolog.Debug("Processing handlers")
+
+	log.Debugf("Processing handlers")
 	for _, handler := range handlers {
 
-		accessToken := handler.GetStringSetting("AccessToken")
-		port := handler.GetStringSetting("Port")
-		//accessToken := t.config.GetSetting("AccessToken")
-		//flogolog.Debug("AccessToken: ", accessToken)
-		var (
-			verificationToken string
-		)
-	
-		flag.StringVar(&verificationToken, "token", accessToken, accessToken)
-		flag.Parse()
-	
+		accessToken := handler.GetStringSetting("accessToken")
+		port := handler.GetStringSetting("port")
+
 		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 			s, err := slack.SlashCommandParse(r)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
-	
-			if !s.ValidateToken(verificationToken) {
+
+			if !s.ValidateToken(accessToken) {
 				w.WriteHeader(http.StatusUnauthorized)
 				return
 			}
-			
-			//params := &slack.Msg{Text: s.Text}
-			t.RunHandler(handler, s.Command, s.Text, w)
+
+			t.RunHandler(handler, s.ChannelID, s.ChannelName, s.Command, s.TeamDomain, s.TeamID, s.Text, s.UserID, s.UserName, w)
 		})
-		fmt.Println("[INFO] Server listening")
-		http.ListenAndServe(":"+port, nil)
-		//log.Debugf("Processing Handler: %s", handler.ActionId)
+		log.Infof("Server listening on port [%s]", port)
+		http.ListenAndServe(fmt.Sprintf(":%s", port), nil)
 	}
 
 	return nil
@@ -93,27 +81,30 @@ func (t *SlackSlashCmdTrigger) Start() error {
 
 // Stop implements ext.Trigger.Stop
 func (t *SlackSlashCmdTrigger) Stop() error {
-	
-	fmt.Printf("Stopping slack slash cmd server...")
-
+	log.Infof("Stopping Slack Slash Command triggers...")
 	return nil
 }
 
-// RunHandler action on new Slack RTM message
-func (t *SlackSlashCmdTrigger) RunHandler(handler *trigger.Handler, command string, params string, w http.ResponseWriter) {
-
+// RunHandler action on new Slack message
+func (t *SlackSlashCmdTrigger) RunHandler(handler *trigger.Handler, channelID string, channelName string, command string, teamDomain string, teamID string, text string, userID string, userName string, w http.ResponseWriter) {
 	trgData := make(map[string]interface{})
+	trgData["channel_id"] = channelID
+	trgData["channel_name"] = channelName
 	trgData["command"] = command
-	trgData["params"] = params
+	trgData["team_domain"] = teamDomain
+	trgData["team_id"] = teamID
+	trgData["text"] = text
+	trgData["user_id"] = userID
+	trgData["user_name"] = userName
 
 	results, err := handler.Handle(context.Background(), trgData)
 
 	if err != nil {
-		fmt.Printf("Error starting action: ", err.Error())
+		log.Errorf("Error starting action: %s", err.Error())
 	}
 
 	var replyData interface{}
-	
+
 	if len(results) != 0 {
 		dataAttr, ok := results["data"]
 		if ok {
@@ -122,14 +113,12 @@ func (t *SlackSlashCmdTrigger) RunHandler(handler *trigger.Handler, command stri
 	}
 
 	if replyData != nil {
-		w.Header().Set("Content-Type", "application/json")	
+		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(replyData); err != nil {
-			fmt.Printf(err.Error())
+			log.Errorf("Error replying to Slack: %s", err.Error())
 		}
 		return
 	}
 
-
-	fmt.Printf("Ran Handler: [%s]", handler)
-	
+	log.Debugf("Ran Handler: [%s]", handler)
 }

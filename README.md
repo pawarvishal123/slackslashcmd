@@ -1,11 +1,15 @@
 # Slack Slash Command Trigger
-Flogo trigger activity for Slack Slash Commands. You need to register slack slash command for your "slack app" and provide public URL of you flogo app endpoint. 
-Slack "Verification Token" should be provided as input for activity configuration.
+
+This trigger provides your flogo application the ability to react to Slack "Slash Commands".
 
 ## Installation
 
 ```bash
 flogo install github.com/pawarvishal123/slackslashcmd
+```
+Link for flogo web:
+```
+https://github.com/github.com/pawarvishal123/slackslashcmd
 ```
 
 ## Schema
@@ -15,11 +19,35 @@ Settings, Outputs and Endpoint:
 {
   "output": [
     {
+      "name": "channel_id",
+      "type": "string"
+    },
+    {
+      "name": "channel_name",
+      "type": "string"
+    },
+    {
       "name": "command",
       "type": "string"
     },
     {
-      "name": "params",
+      "name": "team_domain",
+      "type": "string"
+    },
+    {
+      "name": "team_id",
+      "type": "string"
+    },
+    {
+      "name": "text",
+      "type": "string"
+    },
+    {
+      "name": "user_id",
+      "type": "string"
+    },
+    {
+      "name": "user_name",
       "type": "string"
     }
   ],
@@ -31,24 +59,41 @@ Settings, Outputs and Endpoint:
   ],
   "handler": {
     "settings": [{
-      "name": "AccessToken",
+      "name": "accessToken",
       "type": "string",
 	  "required":"true"
     },
     {
-      "name": "Port",
+      "name": "port",
       "type": "string",
 	  "required":"true"
     }]
 ```
 
+## Outputs
+| Output       | Description                                                                                                                   |
+|:-------------|:------------------------------------------------------------------------------------------------------------------------------|
+| channel_id   | The unique ID of the channel the command came from                                                                            |
+| channel_name | The name of the channel the command came from                                                                                 |
+| command      | The Slack command that was executed                                                                                           |
+| team_domain  | The name of the Slack workspace (if the URL of your Slack workspace is `myteam.slack.com`, the team_domain would be `myteam`) |
+| team_id      | The unique ID of your Slack workspace                                                                                         |
+| text         | The additional text that was sent                                                                                             |
+| user_id      | The ID of the user that sent the message                                                                                      |
+| user_name    | The name of the user that sent the message                                                                                    |
+
+## Reply
+| Reply | Description                        |
+|:------|:-----------------------------------|
+| data  | The response you want to send back |
+
+## Handler
+| Handler     | Description                                                                                                       |
+|:------------|:------------------------------------------------------------------------------------------------------------------|
+| accessToken | The Verification Token of your Slack app. The trigger uses this to validate the message actually comes from Slack |
+| port        | The HTTP port your app will listen on                                                                             |
+
 ## Example Configurations
-
-Triggers are configured via the triggers.json of your application. The following are some example configuration of the Slack Slash command Trigger.
-
-### Start a flow
-Provide access token and port number to receive command from slack channel. The access token should have scope and permissions configured.
-
 ```json
 {
   "triggers": [
@@ -74,6 +119,3 @@ Provide access token and port number to receive command from slack channel. The 
     ]
 }
 ```
-
-## Third Party Library
-Slack API in Go - [https://github.com/nlopes/slack](https://github.com/nlopes/slack)
